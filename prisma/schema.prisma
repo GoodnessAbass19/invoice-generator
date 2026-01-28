@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  businessName String
+  password     String
+  logo         String    @default("")
+  invoice      Invoice[]
+}
+
+model Invoice {
+  id        String        @id @default(uuid())
+  invoiceNo String
+  status    InvoiceStatus @default(DRAFT)
+
+  // Customer Details
+  customerName   String
+  customerEmail  String
+  billingAddress String
+
+  // Dates
+  issueDate DateTime
+  dueDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Financials (Using Decimal for precision)
+  subTotal    Decimal
+  taxRate     Decimal @default(7.5)
+  totalAmount Decimal
+  currency    String  @default("USD")
+  notes       String?
+
+  // Relations
+  items InvoiceItem[]
+
+  // Relation to User (Fixed: Removed @unique to allow multiple invoices per user)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([invoiceNo])
+}
+
+model InvoiceItem {
+  id          String  @id @default(uuid())
+  description String
+  quantity    Int
+  unitPrice   Decimal
+  amount      Decimal // (quantity * unitPrice)
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
