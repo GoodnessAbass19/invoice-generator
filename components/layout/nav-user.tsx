@@ -96,11 +96,11 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link
-                  href={""}
+                  href={"/dashboard/profile"}
                   className={cn(
                     "w-full flex justify-start items-center gap-2 transition-colors duration-200",
                     // Highlight active HoverPrefetchLink based on pathname.startsWith for nested routes
-                    pathname === ""
+                    pathname === "/dashboard/profile"
                       ? "bg-blue-600 text-white shadow-md hover:bg-blue-700"
                       : "",
                   )}

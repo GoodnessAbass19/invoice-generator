@@ -31,6 +31,7 @@ model Invoice {
   // Customer Details
   customerName   String
   customerEmail  String
+  customerPhone  String?
   billingAddress String
 
   // Dates

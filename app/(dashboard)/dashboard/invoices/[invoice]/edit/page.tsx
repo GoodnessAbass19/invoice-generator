@@ -1,16 +1,10 @@
-import EditInvoice from "@/components/dashboard/edit-invoice";
+import EditInvoiceForm from "@/components/dashboard/edit-invoice";
 
-const EditInvoicePage = async ({
+export default async function EditInvoicePage({
   params,
 }: {
-  params: Promise<{ invoice: string }>;
-}) => {
+  params: { invoice: string };
+}) {
   const { invoice } = await params;
-  return (
-    <div>
-      <EditInvoice />
-    </div>
-  );
-};
-
-export default EditInvoicePage;
+  return <EditInvoiceForm invoiceId={invoice} />;
+}

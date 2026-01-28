@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getCurrentUser } from "@/lib/auth";
+import { invoiceSchema } from "@/lib/form-schema";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -39,29 +41,69 @@ export async function GET(
 }
 
 export async function PATCH(
-  request: Request,
+  req: Request,
   { params }: { params: Promise<{ invoice: string }> },
 ) {
   try {
     const { invoice } = await params;
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "unauthorised" }, { status: 401 });
-    }
+    const body = await req.json();
 
-    if (!invoice) {
+    // 1. Validate the request body
+    const validatedData = invoiceSchema.parse(body);
+
+    // 2. Perform the update in a transaction
+    const updatedInvoice = await prisma.$transaction(async (tx) => {
+      // First, delete all existing items associated with this invoice
+      await tx.invoiceItem.deleteMany({
+        where: { invoiceId: invoice },
+      });
+
+      // Update the invoice details and create new items
+      return await tx.invoice.update({
+        where: { id: invoice },
+        data: {
+          invoiceNo: validatedData.invoiceNo,
+          status: validatedData.status,
+          customerName: validatedData.customerName,
+          customerEmail: validatedData.customerEmail,
+          customerPhone: validatedData.customerPhone,
+          billingAddress: validatedData.billingAddress,
+          issueDate: new Date(validatedData.issueDate),
+          dueDate: new Date(validatedData.dueDate),
+          currency: validatedData.currency,
+          taxRate: validatedData.taxRate || 0,
+          notes: validatedData.notes,
+          // Re-insert the items from the form
+          items: {
+            createMany: {
+              data: validatedData.items.map((item) => ({
+                description: item.description,
+                quantity: Number(item.quantity),
+                unitPrice: Number(item.unitPrice),
+                amount: item.quantity * item.unitPrice,
+              })),
+            },
+          },
+        },
+        include: {
+          items: true,
+        },
+      });
+    });
+
+    return NextResponse.json(updatedInvoice, { status: 200 });
+  } catch (error: any) {
+    console.error("PATCH_INVOICE_ERROR:", error);
+
+    if (error.name === "ZodError") {
       return NextResponse.json(
-        { error: "Invoice ID is required." },
+        { error: "Validation failed", details: error.errors },
         { status: 400 },
       );
     }
 
-    const body = await request.json();
-    const {} = body;
-  } catch (error) {
-    console.error("API Error fetching trader invoice:", error);
     return NextResponse.json(
-      { error: "Failed to fetch trader invoice." },
+      { error: "Internal Server Error" },
       { status: 500 },
     );
   }
