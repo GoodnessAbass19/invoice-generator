@@ -8,7 +8,7 @@ const EditInvoicePage = async ({
   const { invoice } = await params;
   return (
     <div>
-      <EditInvoice param={invoice} />
+      <EditInvoice />
     </div>
   );
 };
