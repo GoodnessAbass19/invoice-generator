@@ -19,6 +19,9 @@ export async function GET() {
       include: {
         items: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return NextResponse.json(invoices, { status: 200 });

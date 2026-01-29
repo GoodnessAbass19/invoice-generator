@@ -25,10 +25,10 @@ export function getInitials(name: string): string {
   return initials;
 }
 
-export const formatCurrencyValue = (value: any) => {
+export const formatCurrencyValue = (value: any, currency?: string) => {
   const formattedValue = new Intl.NumberFormat("en-NG", {
     style: "currency",
-    currency: "NGN",
+    currency: currency || "NGN",
   }).format(value);
 
   // Split the formatted value before the decimal point

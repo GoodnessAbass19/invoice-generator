@@ -51,11 +51,11 @@ interface PriceChangeParams {
   value: string;
 }
 
-const CreateInvoice = () => {
+const CreateInvoice = ({ invoiceNo }: { invoiceNo: string }) => {
   const form = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema) as Resolver<InvoiceFormValues>,
     defaultValues: {
-      invoiceNo: "",
+      invoiceNo: invoiceNo,
       status: "PENDING",
       customerName: "",
       customerEmail: "",
@@ -181,6 +181,7 @@ const CreateInvoice = () => {
                       </FormLabel>
                       <Input
                         {...field}
+                        disabled
                         placeholder="INV-2026-001"
                         className="focus:ring-[#135bec]"
                       />

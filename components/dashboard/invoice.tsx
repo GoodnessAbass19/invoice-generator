@@ -398,7 +398,7 @@ const InvoiceManagement = () => {
                     })}
                   </TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                    {formatCurrencyValue(invoice.totalAmount)}
+                    {formatCurrencyValue(invoice.totalAmount, invoice.currency)}
                   </TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                     <Badge variant={getStatusBadgeVariant(invoice.status)}>
