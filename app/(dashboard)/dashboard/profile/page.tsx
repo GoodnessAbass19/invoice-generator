@@ -1,12 +1,9 @@
-import React from "react";
+import ProfileSettingsPage from "@/components/dashboard/profile-settings";
 
 const page = () => {
   return (
     <div>
-      page Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia,
-      nesciunt nam aliquam, culpa amet explicabo quod in quidem similique harum
-      veniam voluptas illum minus reprehenderit incidunt nobis? Quibusdam, dolor
-      quod.
+      <ProfileSettingsPage />
     </div>
   );
 };

@@ -96,16 +96,22 @@ const money = (value: number, currency = "USD") =>
     currency,
   }).format(value);
 
-export const InvoicePDF = ({ data }: { data: any }) => {
+export const InvoicePDF = ({
+  data,
+  businessName,
+}: {
+  data: any;
+  businessName: string;
+}) => {
   const currency = data.currency || "USD";
 
   return (
     <Document>
-      <Page size="LETTER" style={styles.page}>
+      <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.title}>INVOICE</Text>
+            <Text style={styles.title}>{businessName}</Text>
             <Text># {data.invoiceNo}</Text>
           </View>
 

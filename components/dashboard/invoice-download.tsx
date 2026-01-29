@@ -6,14 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { InvoicePDF } from "./invoice-template";
 
-export function InvoicePDFDownload({ invoice }: { invoice: any }) {
+export function InvoicePDFDownload({
+  invoice,
+  businessName,
+}: {
+  invoice: any;
+  businessName: string;
+}) {
   return (
     <PDFDownloadLink
-      document={<InvoicePDF data={invoice} />}
+      document={<InvoicePDF data={invoice} businessName={businessName} />}
       fileName={`invoice_${invoice.invoiceNo}.pdf`}
     >
       {({ loading }) => (
-        <Button disabled={loading} className="gap-2">
+        <Button disabled={loading} className="gap-2 hover:cursor-pointer">
           <Download className="h-4 w-4" />
           {loading ? "Generating PDF…" : "Download PDF"}
         </Button>

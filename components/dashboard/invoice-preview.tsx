@@ -7,11 +7,13 @@ import { formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/hooks/user-context";
 
 export const InvoiceHTMLPreview = ({ data }: { data: any }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const pdfRef = useRef<HTMLDivElement>(null);
   const currency = data.currency || "USD";
+  const user = useUser();
 
   const handleDownload = async () => {
     if (!pdfRef.current) return;
@@ -90,7 +92,7 @@ export const InvoiceHTMLPreview = ({ data }: { data: any }) => {
       >
         {/* Header */}
         <div className="flex justify-between mb-12">
-          <h1 className="text-4xl font-black">INVOICE</h1>
+          <h1 className="text-4xl font-black">{user.admin?.businessName}</h1>
 
           <div className="text-right">
             <Badge variant="outline">{data.status || "DRAFT"}</Badge>

@@ -408,7 +408,10 @@ const InvoiceManagement = () => {
                   <TableCell>
                     <div className="flex justify-end gap-2">
                       {/* <InvoicePreviewModal invoice={invoice} /> */}
-                      <InvoicePDFDownload invoice={invoice} />
+                      <InvoicePDFDownload
+                        invoice={invoice}
+                        businessName={user.admin!.businessName}
+                      />
 
                       <Button
                         variant="outline"

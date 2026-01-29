@@ -95,3 +95,11 @@ export const invoiceSchema = z
       });
     }
   });
+
+export const profileSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  companyName: z.string().min(1, "Company name is required"),
+  website: z.string().url("Invalid URL").optional().or(z.literal("")),
+  address: z.string().min(5, "Please provide a full business address"),
+});
